@@ -1,0 +1,33 @@
+<ion-view view-title="Live Scores">
+
+  <ion-nav-buttons side="right">
+        <i class="icon ion-loop menu-button" ng-click="refresh()">
+        </i>
+    </ion-nav-buttons>
+
+  <ion-content>
+
+    <ion-spinner icon="bubbles" ng-if="showLoadingFlag" class="show-loading-icon"></ion-spinner>
+    <ion-list>
+
+          <ion-item class="livescore-style" ng-repeat="livedata in scoreData">
+            <div class="date-livescore">
+            {{livedata[0].game.date}}
+            </div>
+            <ion-list >
+              <ion-item class="result-livescore" ng-repeat="gamedata in livedata">
+                <div class="team1-text">{{gamedata.game.homeTeam.City}}&nbsp;{{gamedata.game.homeTeam.Name}}</div>
+                <div class="score1-text" ng-if="gamedata.isUnplayed==='true'">-</div>
+                <div class="score1-text" ng-if="gamedata.isCompleted==='true'">{{gamedata.homeScore}}</div>
+                <div class="score1-text" ng-if="gamedata.isInProgress==='true'">{{gamedata.homeScore}}(P)</div>
+                <div class="vs-text">:</div>
+                <div class="score2-text" ng-if="gamedata.isUnplayed==='true'">-</div>
+                <div class="score2-text" ng-if="gamedata.isCompleted==='true'">{{gamedata.awayScore}}</div>
+                <div class="score2-text" ng-if="gamedata.isInProgress==='true'">{{gamedata.awayScore}}(P)</div>
+                <div class="team2-text">{{gamedata.game.awayTeam.City}}&nbsp;{{gamedata.game.awayTeam.Name}}</div>
+              </ion-item>
+            </ion-list>
+          </ion-item>
+    <ion-list>
+  </ion-content>
+</ion-view>
