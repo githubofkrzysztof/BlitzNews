@@ -1,11 +1,9 @@
 angular.module('filters', [])
 
 .filter('formatTwitterDate', function() {
-
     return function(input) {
             var rightNow = new Date();
             var then = new Date(input);
-
             var diff = rightNow - then;
             var second = 1000,
                 minute = second * 60,
@@ -13,10 +11,9 @@ angular.module('filters', [])
                 day = hour * 24,
                 week = day * 7;
             if (isNaN(diff) || diff < 0) {
-                return ""; // return blank string if unknown
+                return ""; 
             }
             if (diff < second * 2) {
-                // within 2 seconds
                 return "right now";
             }
             if (diff < minute) {
@@ -47,9 +44,6 @@ angular.module('filters', [])
 })
 
 .filter('formatTwitterText', function() {
-    /*
-        Parses tweet text for links, hashes etc.
-    */
     return function(tweet) {
         TweetFunc = {
             link: function (tweet) {
@@ -74,7 +68,6 @@ angular.module('filters', [])
                 });
             }
         }
-
         return TweetFunc.hash(TweetFunc.at(TweetFunc.list(TweetFunc.link(tweet))));
     }
 });

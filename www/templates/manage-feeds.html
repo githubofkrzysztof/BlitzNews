@@ -1,16 +1,13 @@
 <ion-view view-title="Manage Feeds">
 	<ion-nav-buttons side="right">
-        <i class="icon save-button" ng-click="saveFeeds()">
-        Save
-        </i>
-        <i class="icon ion-android-more-vertical more-option-icon" ng-click="selectAll()"></i>
-    </ion-nav-buttons>
+    <i class="icon ion-android-more-vertical more-option-icon" ng-click="selectAll()"></i>
+  </ion-nav-buttons>
   <ion-content>
     <div class="manage-content">
-    	<div class="card card-manage" ng-repeat="newslist in newslists" ng-click="selectFeeds()">
-        <img src="img/sources/{{newslist.id}}.png" class="manage-image"/>
+    	<div class="card card-manage" ng-repeat="newslist in playlists" ng-click="selectFeeds(newslist.id)">
+        <img src="img/sources/{{newslist.id}} copy.png" class="manage-image"/>
         <div class="sources-text">{{newslist.title}}</div>
-        <ion-checkbox class="check-box" ng-checked="true"></ion-checkbox>
+        <ion-checkbox class="check-box" ng-checked="newslist.checked"></ion-checkbox>
       </div>
     </div>
   </ion-content>

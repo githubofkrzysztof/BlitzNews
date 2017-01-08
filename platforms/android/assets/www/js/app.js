@@ -7,6 +7,17 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova', 'services'])
 
 .run(function($ionicPlatform) {
+
+  Parse.initialize("s9Txhv1LTyfjUF1jsix4un54rS960OqQdB1ILFiw", "14Or35vF9IXeicV8a65p4XJzJRB0krYxIB8d75xD");
+  Parse.serverURL = "https://parseapi.back4app.com/";
+
+
+  
+
+
+
+
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)

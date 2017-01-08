@@ -3,11 +3,8 @@
         <i class="icon ion-loop menu-button" ng-click="refresh()">
         </i>
     </ion-nav-buttons>
-
   	<ion-content class="standing-content">
-        
         <ion-spinner icon="bubbles" ng-if="showLoadingFlag" class="show-loading-icon1"></ion-spinner>
-
     	<ion-list class="standing-list-container">
       		<ion-item class="card standing-list-style" ng-repeat="data in standingData">
         		<div class="row header custom-header">
@@ -18,7 +15,6 @@
                     <div class="col">T</div>
                     <div class="col">PF</div>
         		</div>	
-
         		<div class="row table-body" ng-repeat="teamdata in data.teamentry">
         			<div class="col col-50" style="color:#11c1f3;">{{teamdata.team.City}}&nbsp;{{teamdata.team.Name}}</div>
         			<div class="col">{{teamdata.stats.GamesPlayed['#text']}}</div>
@@ -27,10 +23,8 @@
                     <div class="col">{{teamdata.stats.Ties['#text']}}</div>
                     <div class="col">{{teamdata.stats.PointsFor['#text']}}</div>
         		</div>
-
       		</ion-item>
     	</ion-list>
-        
   	</ion-content>
 </ion-view>
 

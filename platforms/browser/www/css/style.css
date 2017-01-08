@@ -311,7 +311,8 @@ input[type="search"]{
 }
 
 .standing-content{
-	height : calc(100vh - 16vw - 64px); background-color : rgb(21, 21, 21);
+	/*height : calc(100vh - 64px);*/ 
+	background-color : rgb(21, 21, 21);
 }
 
 .banner{
@@ -363,7 +364,7 @@ input[type="search"]{
 }
 
 .team1-text{
-	color : white; float : left; width : 40vw; text-align: center;
+	color: #11c1f3; float : left; width : 40vw; text-align: center;
 }
 
 .score1-text{
@@ -379,7 +380,7 @@ input[type="search"]{
 }
 
 .team2-text{
-	color : white; float : left; width : 40vw; text-align: center;
+	color: #11c1f3; float : left; width : 40vw; text-align: center;
 }
 
 

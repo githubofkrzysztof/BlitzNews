@@ -3,7 +3,6 @@ angular.module('services', [])
 .factory('Base64', function(){
     var self = this;
     self.encode = function (input) {
-
         // The indices of this array provide the map from numbers to base 64
         var swaps = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9","+","/"];
         var input_binary = "";      // The input string, converted to Unicode numbers and written out in binary

@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "angular": "^1.5.9",
-    "ngCordova": "^0.1.27-alpha"
+    "ngCordova": "^0.1.27-alpha",
+    "ngstorage": "^0.3.11"
   }
 }
