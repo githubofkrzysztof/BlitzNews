@@ -926,7 +926,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                     if (mmm<10){
                       mmm='0'+mmm;
                     }
-                    $scope.scoreData[k][0].game.date=ddd+"/"+mmm+"/"+yyyyy;
+                    $scope.scoreData[k][0].game.date=mmm+"/"+ddd+"/"+yyyyy;
                 }
 
             }
