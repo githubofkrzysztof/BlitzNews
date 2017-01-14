@@ -917,9 +917,9 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
 
                 for (var k = 0; k<$scope.scoreData.length; k++){
                     var temp_date = new Date($scope.scoreData[k][0].game.date);
-                    var ddd=temp_date.getDate();
-                    var mmm=temp_date.getMonth()+1;
-                    var yyyyy=temp_date.getFullYear();
+                    var ddd=temp_date.getUTCDate();
+                    var mmm=temp_date.getUTCMonth()+1;
+                    var yyyyy=temp_date.getUTCFullYear();
                     if (ddd<10){
                       ddd='0'+ddd;
                     }
