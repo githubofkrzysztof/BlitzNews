@@ -461,11 +461,11 @@ input[type="search"]{
 }*/
 
 /* The third method for iFrmae */
-iframe {
+/*iframe {
     width: 1px;
     min-width: 100%;
     *width: 100%;
-}
+}*/
 
 .bar .title.title-left {
     text-align: center;
