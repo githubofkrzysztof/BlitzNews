@@ -1,50 +1,15 @@
 <ion-view view-title="Live Scores">
 
-  <ion-nav-buttons side="right">
+    <ion-nav-buttons side="right">
         <i class="icon ion-loop menu-button" ng-click="refresh()">
         </i>
     </ion-nav-buttons>
 
-<!-- <ion-content class="standing-content">
-        
+    <ion-content class="standing-content">
         <ion-spinner icon="bubbles" ng-if="showLoadingFlag" class="show-loading-icon1"></ion-spinner>
-
-      <ion-list class="standing-list-container">
-          <ion-item class="card standing-list-style" ng-repeat="data in standingData">
-            <div class="row header custom-header">
-              <div class="col col-50" style="width:50%;">{{data['@name']}}</div>
-              <div class="col">GP</div>
-              <div class="col">W</div>
-              <div class="col">L</div>
-                    <div class="col">T</div>
-                    <div class="col">PF</div>
-            </div>  
-
-            <div class="row table-body" ng-repeat="teamdata in data.teamentry">
-              <div class="col col-50" style="color:#11c1f3;">{{teamdata.team.City}}&nbsp;{{teamdata.team.Name}}</div>
-              <div class="col">{{teamdata.stats.GamesPlayed['#text']}}</div>
-              <div class="col">{{teamdata.stats.Wins['#text']}}</div>
-              <div class="col">{{teamdata.stats.Losses['#text']}}</div>
-                    <div class="col">{{teamdata.stats.Ties['#text']}}</div>
-                    <div class="col">{{teamdata.stats.PointsFor['#text']}}</div>
-            </div>
-
-          </ion-item>
-      </ion-list>
-        
-    </ion-content> -->
-  <ion-content class="standing-content">
-
-    <ion-spinner icon="bubbles" ng-if="showLoadingFlag" class="show-loading-icon1"></ion-spinner>
-    <ion-list class="standing-list-container">
-
-          <ion-item class="standing-list-style" ng-repeat="livedata in scoreData">
-            <!-- <div class="date-livescore">
-            {{livedata[0].game.date}}
-            </div> -->
-            <!-- <ion-list > -->
+        <ion-list class="standing-list-container">
+            <ion-item class="standing-list-style" ng-repeat="livedata in scoreData">
               <ion-item class="card standing-list-style" ng-repeat="gamedata in livedata">
-
                 <div class="row header custom-header">
                     <div class="col col-50" style="width:50%;">{{livedata[0].game.date}}</div>
                     <div class="col">1</div>
@@ -52,9 +17,7 @@
                     <div class="col">3</div>
                     <div class="col">4</div>
                     <div class="col col-15">T</div>
-
                 </div>
-
                 <div class="row table-body">
                     <div class="col col-50" style="color:#11c1f3;">{{gamedata.game.homeTeam.City}}&nbsp;{{gamedata.game.homeTeam.Name}}</div>
                     <div class="col" ng-if="gamedata.isUnplayed==='true'">-</div>
@@ -77,10 +40,8 @@
                     <div class="col col-15" style="font-size:3vh !important" ng-if="gamedata.isCompleted==='true'">{{gamedata.homeScore}}</div>
                     <div class="col col-15" style="font-size:3vh !important" ng-if="gamedata.isInProgress==='true'">{{gamedata.homeScore}}(P)</div>
                 </div>
-
                 <div class="row table-body">
                     <div class="col col-50" style="color:#11c1f3;">{{gamedata.game.awayTeam.City}}&nbsp;{{gamedata.game.awayTeam.Name}}</div>
-                    
                     <div class="col" ng-if="gamedata.isUnplayed==='true'">-</div>
                     <div class="col" ng-if="gamedata.isCompleted==='true'">{{gamedata.quarterSummary.quarter[0].awayScore}}</div>
                     <div class="col" ng-if="gamedata.isInProgress==='true'">-</div>
@@ -101,46 +62,11 @@
                     <div class="col col-15" style="font-size:3vh !important" ng-if="gamedata.isCompleted==='true'">{{gamedata.awayScore}}</div>
                     <div class="col col-15" style="font-size:3vh !important" ng-if="gamedata.isInProgress==='true'">{{gamedata.awayScore}}(P)</div>
                 </div>
-                <!-- <div class="team1-text">{{gamedata.game.homeTeam.City}}&nbsp;{{gamedata.game.homeTeam.Name}}</div>
-                <div class="score1-text" ng-if="gamedata.isUnplayed==='true'">-</div>
-                <div class="score1-text" ng-if="gamedata.isCompleted==='true'">{{gamedata.homeScore}}</div>
-                <div class="score1-text" ng-if="gamedata.isInProgress==='true'">{{gamedata.homeScore}}(P)</div>
-                <div class="vs-text">:</div>
-                <div class="score2-text" ng-if="gamedata.isUnplayed==='true'">-</div>
-                <div class="score2-text" ng-if="gamedata.isCompleted==='true'">{{gamedata.awayScore}}</div>
-                <div class="score2-text" ng-if="gamedata.isInProgress==='true'">{{gamedata.awayScore}}(P)</div>
-                <div class="team2-text">{{gamedata.game.awayTeam.City}}&nbsp;{{gamedata.game.awayTeam.Name}}</div> -->
               </ion-item>
-            <!-- </ion-list> -->
-          </ion-item>
-    <ion-list>
+            </ion-item>
+        <ion-list>
   </ion-content>
 
-  <!-- <ion-content>
-
-    <ion-spinner icon="bubbles" ng-if="showLoadingFlag" class="show-loading-icon"></ion-spinner>
-    <ion-list>
-
-          <ion-item class="livescore-style" ng-repeat="livedata in scoreData">
-            <div class="date-livescore">
-            {{livedata[0].game.date}}
-            </div>
-            <ion-list >
-              <ion-item class="result-livescore" ng-repeat="gamedata in livedata">
-                <div class="team1-text">{{gamedata.game.homeTeam.City}}&nbsp;{{gamedata.game.homeTeam.Name}}</div>
-                <div class="score1-text" ng-if="gamedata.isUnplayed==='true'">-</div>
-                <div class="score1-text" ng-if="gamedata.isCompleted==='true'">{{gamedata.homeScore}}</div>
-                <div class="score1-text" ng-if="gamedata.isInProgress==='true'">{{gamedata.homeScore}}(P)</div>
-                <div class="vs-text">:</div>
-                <div class="score2-text" ng-if="gamedata.isUnplayed==='true'">-</div>
-                <div class="score2-text" ng-if="gamedata.isCompleted==='true'">{{gamedata.awayScore}}</div>
-                <div class="score2-text" ng-if="gamedata.isInProgress==='true'">{{gamedata.awayScore}}(P)</div>
-                <div class="team2-text">{{gamedata.game.awayTeam.City}}&nbsp;{{gamedata.game.awayTeam.Name}}</div>
-              </ion-item>
-            </ion-list>
-          </ion-item>
-    <ion-list>
-  </ion-content> -->
 </ion-view>
 
 

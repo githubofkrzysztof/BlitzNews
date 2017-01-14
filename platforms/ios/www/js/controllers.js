@@ -27,6 +27,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       return $http({
         method : 'GET',
         url : 'https://www.mysportsfeeds.com/api/feed/pull/nfl/'+current_year+'-'+end_year+'-regular/scoreboard.json?fordate='+date,
+        //url : 'https://www.mysportsfeeds.com/api/feed/pull/nfl/'+current_year+'-'+end_year+'-regular/scoreboard.json?fordate=20170101',
         headers : {'Authorization': 'Basic ZGFyaW5nYXBwc2xsYzoyMUJyYXZvMzZaZXRh'}
       });
     }
@@ -254,7 +255,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
 
 .controller('NewsSourceCtrl', function($scope, $stateParams, $ionicActionSheet, 
                   $ionicScrollDelegate, $timeout, $rootScope, $http, $cordovaInAppBrowser, TwitterREST) {
-
+  
   $scope.showLoadingFlag = true;
   $timeout(function(){
     $scope.showLoadingFlag = false;
@@ -412,12 +413,30 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
     $rootScope.feed_type = true;
     $rootScope.posts=[];
     $rootScope.images=[];
-    var google_converter="http://ajax.googleapis.com/ajax/services/feed/load?v=2.0&num=50&callback=JSON_CALLBACK&q=";
-    var request = $http.jsonp(google_converter + encodeURIComponent(url));
+    var google_converter="http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=50&callback=JSON_CALLBACK&q=";
+    //var google_converter1="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url%20%3D%20'";
+    //var google_converter2="'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=JSON_CALLBACK";
+    console.log(encodeURIComponent(url));
+    //var request = $http.jsonp(google_converter + encodeURIComponent(url));
+    var request = $http.jsonp("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url%20%3D%20'" 
+      + encodeURIComponent(url) + "'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=JSON_CALLBACK");
     request.success(function(res){
-      var insteadposts = res.responseData.feed.entries;
+      console.log(res);
+      //var insteadposts = res.responseData.feed.entries;
+      var insteadposts;
+      if ($stateParams.playlistId != 12){
+        insteadposts = res.query.results.rss.channel.item;
+      }
+      else{
+        insteadposts = res.query.results.feed.entry;
+      }
       for(var ii=0; ii<insteadposts.length; ii++){
-          if (insteadposts[ii].content.includes("nfl") || insteadposts[ii].link.includes("nfl") || insteadposts[ii].title.includes("nfl") 
+
+
+        
+
+
+          if (insteadposts[ii].description.includes("nfl") || insteadposts[ii].link.includes("nfl") || insteadposts[ii].title.includes("nfl") 
               || $stateParams.playlistId>=10 || $stateParams.playlistId==3 || $stateParams.playlistId==8){
               $rootScope.posts.push(insteadposts[ii]);
               if ($stateParams.playlistId == 0){
@@ -428,18 +447,26 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
               }
               else if($stateParams.playlistId ==3){
 
-                  if (insteadposts[ii].mediaGroups != null){
-                    console.log(insteadposts[ii].mediaGroups[0].contents[0].url);
-                    $rootScope.images.push(insteadposts[ii].mediaGroups[0].contents[0].url);
+                  if (insteadposts[ii].content != null){
+                    console.log(insteadposts[ii].content.url);
+                    $rootScope.images.push(insteadposts[ii].content.url);
                   }
                   else{
                     $rootScope.images.push("img/sources/4.png");
                   }
               }
               else if($stateParams.playlistId == 4){
-                  if (insteadposts[ii].mediaGroups != null){
-                    console.log(insteadposts[ii].mediaGroups[0].contents[0].url);
-                    $rootScope.images.push(insteadposts[ii].mediaGroups[0].contents[0].url);
+                  // if (insteadposts[ii].mediaGroups != null){
+                  //   console.log(insteadposts[ii].mediaGroups[0].contents[0].url);
+                  //   $rootScope.images.push(insteadposts[ii].mediaGroups[0].contents[0].url);
+                  // }
+                  // else{
+                  //   $rootScope.images.push("img/sources/5.png");
+                  // }
+
+                  if (insteadposts[ii].content != null){
+                    console.log(insteadposts[ii].content[0].url);
+                    $rootScope.images.push(insteadposts[ii].content[0].url);
                   }
                   else{
                     $rootScope.images.push("img/sources/5.png");
@@ -449,9 +476,9 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                   $rootScope.images.push('img/sources/6.png');
               }
               else if ($stateParams.playlistId == 6){
-                if (insteadposts[ii].mediaGroups != null){
-                    console.log(insteadposts[ii].mediaGroups[0].contents[0].url);
-                    $rootScope.images.push(insteadposts[ii].mediaGroups[0].contents[0].url);
+                if (insteadposts[ii].content != null){
+                    console.log(insteadposts[ii].content.url);
+                    $rootScope.images.push(insteadposts[ii].content.url);
                   }
                   else{
                     $rootScope.images.push("img/sources/7.png");
@@ -468,8 +495,8 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
               }
               else if ($stateParams.playlistId == 12){
                   
-                  var end_position = insteadposts[ii].content.indexOf(">");
-                  var image_str = insteadposts[ii].content.substring(17, end_position-1);
+                  var end_position = insteadposts[ii].description.indexOf(">");
+                  var image_str = insteadposts[ii].description.substring(17, end_position-1);
                   if (image_str != null){
                     $rootScope.images.push(image_str);
                   }
@@ -502,9 +529,9 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                   $rootScope.images.push("img/sources/28.png");
               }
               else if($stateParams.playlistId == 29){
-                  if (insteadposts[ii].mediaGroups != null){
-                    console.log(insteadposts[ii].mediaGroups[0].contents[0].url);
-                    $rootScope.images.push(insteadposts[ii].mediaGroups[0].contents[0].url);
+                  if (insteadposts[ii].content != null){
+                    console.log(insteadposts[ii].content.url);
+                    $rootScope.images.push(insteadposts[ii].content.url);
                   }
                   else{
                     $rootScope.images.push("img/sources/30.png");
@@ -541,9 +568,9 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                   $rootScope.images.push("img/sources/50.png");
               }
               else if ($stateParams.playlistId == 51){
-                  if (insteadposts[ii].mediaGroups != null){
-                    console.log(insteadposts[ii].mediaGroups[0].contents[0].url);
-                    $rootScope.images.push(insteadposts[ii].mediaGroups[0].contents[0].url);
+                  if (insteadposts[ii].content != null){
+                    console.log(insteadposts[ii].content.url);
+                    $rootScope.images.push(insteadposts[ii].content.url);
                   }
                   else{
                     $rootScope.images.push("img/sources/52.png");
@@ -574,9 +601,9 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                   $rootScope.images.push("img/sources/68.png");
               }
               else if ($stateParams.playlistId == 69){
-                  if (insteadposts[ii].mediaGroups != null){
-                    console.log(insteadposts[ii].mediaGroups[0].contents[0].url);
-                    $rootScope.images.push(insteadposts[ii].mediaGroups[0].contents[0].url);
+                  if (insteadposts[ii].content != null){
+                    console.log(insteadposts[ii].content.url);
+                    $rootScope.images.push(insteadposts[ii].content.url);
                   }
                   else{
                     $rootScope.images.push("img/sources/70.png");
@@ -592,13 +619,14 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                   $rootScope.images.push("img/sources/76.png");
               }
           }
+        
       }
       console.log($rootScope.posts);
 
       for (var i = 0; i<$rootScope.posts.length; i++){
           for (var j = i+1; j<$rootScope.posts.length; j++){
-              var d1=Date.parse($rootScope.posts[i].publishedDate);
-              var d2=Date.parse($rootScope.posts[j].publishedDate);
+              var d1=Date.parse($rootScope.posts[i].pubDate);
+              var d2=Date.parse($rootScope.posts[j].pubDate);
               var temp;
               if (d1<d2){
                   temp = $rootScope.posts[i];
@@ -610,23 +638,23 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
 
       for (var i = 0; i<$rootScope.posts.length; i++){
           var d1=new Date();
-          var d2=new Date($rootScope.posts[i].publishedDate);
+          var d2=new Date($rootScope.posts[i].pubDate);
           var diff = new Date(d1.getTime() - d2.getTime());
           var days = diff.getUTCDate()-1;
           var hours = diff.getUTCHours();
           var mins = diff.getUTCMinutes();
 
           if (days > 0){
-              $rootScope.posts[i].publishedDate = days + "d ago";
+              $rootScope.posts[i].pubDate = days + "d ago";
           }
           else if (hours > 0){
-              $rootScope.posts[i].publishedDate = hours + "h ago";
+              $rootScope.posts[i].pubDate = hours + "h ago";
           }
           else if (mins > 0){
-              $rootScope.posts[i].publishedDate = mins + "m ago";
+              $rootScope.posts[i].pubDate = mins + "m ago";
           }
           else {
-              $rootScope.posts[i].publishedDate = "Just posted";
+              $rootScope.posts[i].pubDate = "Just posted";
           }
       }
     })
@@ -736,7 +764,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
   }
 })
 
-.controller('ArticlePreviewCtrl', function($scope, $stateParams, $rootScope, $cordovaInAppBrowser, $sce) {
+.controller('ArticlePreviewCtrl', function($scope, $stateParams, $rootScope, $cordovaInAppBrowser, $sce, $state) {
 
     var article_position;
     article_position = $stateParams.articleId;
@@ -751,14 +779,18 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
     var getPreviewArticle = function(){
       if ($rootScope.feed_type == true){
             $rootScope.article_link = $sce.trustAsResourceUrl($rootScope.posts[article_position].link);
+            console.log($rootScope.article_link);
             $scope.title = $rootScope.posts[article_position].title;
-            $scope.time = $rootScope.posts[article_position].publishedDate;
-            $scope.author = $rootScope.posts[article_position].author;
+            $scope.time = $rootScope.posts[article_position].pubDate;
+            if ($rootScope.posts[article_position].creator!=undefined)
+              $scope.author = $rootScope.posts[article_position].creator;
+            else
+              $scope.author="";
             if ($rootScope.posts[article_position].link.includes("sbnation")){
-              $scope.content = $rootScope.posts[article_position].contentSnippet;
+              $scope.content = $rootScope.posts[article_position].description;
             }
             else{
-              $scope.content = $rootScope.posts[article_position].content;
+              $scope.content = $rootScope.posts[article_position].description;
             }
             $scope.image = $rootScope.images[article_position];
       }
@@ -766,6 +798,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
             var position = $rootScope.posts[article_position].text.search("https://");
             var linkk = $rootScope.posts[article_position].text.substring(position, position+23);
             $rootScope.article_link = $sce.trustAsResourceUrl(linkk);
+            console.log($rootScope.article_link);
             $scope.title = $rootScope.posts[article_position].text;
             $scope.time = $rootScope.posts[article_position].created_at;
             if ($rootScope.posts[article_position].retweeted_status != undefined){
@@ -802,11 +835,12 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
         $scope.showLoadingFlag = false;
         console.log("success+"+JSON.stringify(event));
       });
+      //$state.go('app.article');
     }
     getPreviewArticle();   
 })
 
-.controller('ArticleCtrl', function($scope, $ionicActionSheet, $timeout, $rootScope) {
+.controller('ArticleCtrl', function($scope, $ionicActionSheet, $timeout, $rootScope, $cordovaInAppBrowser) {
   $scope.link = $rootScope.article_link;
   $scope.opensafari = function(url){
     var hideSheet=$ionicActionSheet.show({
@@ -819,8 +853,21 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
         hideSheet();
       },
       buttonClicked:function(inded){
-        alert(url);
-        window.open=(url, '_system', 'location=yes');
+        $scope.showLoadingFlag = true;
+         var options = {
+            location: 'no',
+            clearcache: 'yes',
+            toolbar: 'no'
+         };
+        $cordovaInAppBrowser.open($rootScope.article_link, '_self', options)
+        .then(function(event) {
+            console.log("success+"+JSON.stringify(event));
+            $scope.showLoadingFlag = false;
+        })
+        .catch(function(event) {
+          $scope.showLoadingFlag = false;
+          console.log("success+"+JSON.stringify(event));
+        });
         return true;
       }
     });
@@ -830,7 +877,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
 .controller('LiveScoresCtrl', function($scope, dataService1) {
     $scope.scoreData = [];
     $scope.showLoadingFlag = true;
-    var today = new Date();
+    var today = new Date("2017-01-02");
     today = new Date(today.getTime() + 60*60*24*1000*7)
     var count = 0;
     
@@ -867,6 +914,21 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                         }
                     }
                 }
+
+                for (var k = 0; k<$scope.scoreData.length; k++){
+                    var temp_date = new Date($scope.scoreData[k][0].game.date);
+                    var ddd=temp_date.getDate();
+                    var mmm=temp_date.getMonth()+1;
+                    var yyyyy=temp_date.getFullYear();
+                    if (ddd<10){
+                      ddd='0'+ddd;
+                    }
+                    if (mmm<10){
+                      mmm='0'+mmm;
+                    }
+                    $scope.scoreData[k][0].game.date=ddd+"/"+mmm+"/"+yyyyy;
+                }
+
             }
         });
     }

@@ -2,18 +2,15 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
 
 .service('dataService', function($http){
     delete $http.defaults.headers.common['X-Requested-With'];
-
     var current_year = new Date().getFullYear();
     var end_year = current_year;
     if (new Date().getMonth()+1<9){
       current_year = current_year -1;
     }
-
     this.getData = function(){
       return $http({
         method : 'GET',
         url : 'https://www.mysportsfeeds.com/api/feed/pull/nfl/'+current_year+'-'+end_year+'-regular/division_team_standings.json',
-        //headers : {'Authorization': 'Basic bXlzcG9ydHNmZWVkc29ma3J6eXN6dG9mOlNqZGdkaWVvc3Vz'}
         headers : {'Authorization': 'Basic ZGFyaW5nYXBwc2xsYzoyMUJyYXZvMzZaZXRh'}
       });
     }
@@ -21,25 +18,21 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
 
 .service('dataService1', function($http){
     delete $http.defaults.headers.common['X-Requested-With'];
-
     var current_year = new Date().getFullYear();
     var end_year = current_year;
     if (new Date().getMonth()+1<9){
       current_year = current_year -1;
     }
-
     this.getData = function(date){
       return $http({
         method : 'GET',
         url : 'https://www.mysportsfeeds.com/api/feed/pull/nfl/'+current_year+'-'+end_year+'-regular/scoreboard.json?fordate='+date,
-        //headers : {'Authorization': 'Basic bXlzcG9ydHNmZWVkc29ma3J6eXN6dG9mOlNqZGdkaWVvc3Vz'}
         headers : {'Authorization': 'Basic ZGFyaW5nYXBwc2xsYzoyMUJyYXZvMzZaZXRh'}
       });
     }
 })
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
-
 
 })
 
@@ -49,72 +42,39 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
 
 .controller('StandingsCtrl', function($scope, $http, dataService, $timeout, 
      $state, $stateParams, $ionicPlatform, $ionicPopup) {
- 
-        // if(window.plugins && window.plugins.AdMob) {
-        //     var admob_key = device.platform == "Android" ? "ca-app-pub-7957971173858308/3666912163" : "ca-app-pub-7957971173858308/3666912163";
-        //     var admob = window.plugins.AdMob;
-        //     admob.createBannerView( 
-        //         {
-        //             'publisherId': admob_key,
-        //             'adSize': admob.AD_SIZE.BANNER,
-        //             'bannerAtTop': false
-        //         }, 
-        //         function() {
-        //             admob.requestAd(
-        //                 { 'isTesting': false }, 
-        //                 function() {
-        //                     admob.showAd(true);
-        //                 }, 
-        //                 function() { console.log('failed to request ad'); }
-        //             );
-        //         }, 
-        //         function() { console.log('failed to create banner view'); }
-        //     );
-        // }
-
-    
-
     $scope.standingData = null;
     $scope.showLoadingFlag = true;
     dataService.getData().then(function(dataResponse){
       $scope.showLoadingFlag = false;
       $scope.standingData = dataResponse.data.divisionteamstandings.division;
-
       for (var k=0; k<$scope.standingData.length; k++){
           var temp_str = $scope.standingData[k]['@name'];
           $scope.standingData[k]['@name'] = temp_str.substring(4);
       }
       console.log($scope.standingData);
-
       var admobid = {};
-      if( /(android)/i.test(navigator.userAgent) ) { // for android & amazon-fireos
+      if( /(android)/i.test(navigator.userAgent) ) {
         admobid = {
-          banner: 'ca-app-pub-1099116351739935/7329808809', // or DFP format "/6253334/dfp_example_ad"
+          banner: 'ca-app-pub-1099116351739935/7329808809',
           interstitial: 'ca-app-pub-1099116351739935/7329808809'
         };
-      } else if(/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
+      } else if(/(ipod|iphone|ipad)/i.test(navigator.userAgent)) {
         admobid = {
-          banner: 'ca-app-pub-1099116351739935/1422876001', // or DFP format "/6253334/dfp_example_ad"
+          banner: 'ca-app-pub-1099116351739935/1422876001',
           interstitial: 'ca-app-pub-1099116351739935/1422876001'
         };
-      } else { // for windows phone
+      } else {
         admobid = {
-          banner: 'ca-app-pub-xxx/zzz', // or DFP format "/6253334/dfp_example_ad"
+          banner: 'ca-app-pub-xxx/zzz',
           interstitial: 'ca-app-pub-xxx/kkk'
         };
       }
-
       if(AdMob) AdMob.createBanner({
         adId: admobid.banner,
         position: AdMob.AD_POSITION.BOTTOM_CENTER,
         autoShow: true 
       });
     });
-
-    
-    // $timeout(function(){
-    //   $scope.showLoadingFlag = false;
-    // }, 3000);
 
     $scope.refresh = function(){
         $scope.standingData = null;
@@ -124,23 +84,16 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
             $scope.standingData = dataResponse.data.divisionteamstandings.division;
             console.log($scope.standingData);
         });
-
-        
-        // $timeout(function(){
-        //   $scope.showLoadingFlag = false;
-        // }, 3000);
     }
 })
 
 .controller('NewsCtrl', function($scope, $ionicActionSheet, $timeout, $rootScope, TwitterREST, $localStorage) {
-  
   $rootScope.urlList = [];
   var tbl_siteUrl = Parse.Object.extend("siteURL");
   var query = new Parse.Query(tbl_siteUrl);
   query.ascending("order");
   query.find({
     success: function(results) {
-      // Do something with the returned Parse.Object values
       for (var i = 0; i < results.length; i++) {
         $rootScope.urlList.push(results[i].get('url'));
       }
@@ -150,12 +103,8 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       console.log("Error: " + error.code + " " + error.message);
     }
   });
-
-
-
-
   $scope.alert_flag = false;
-  //console.log($localStorage['newslists']);
+  
   if ($localStorage['newslists'] == undefined){
       $rootScope.playlists = [
           { title: 'ESPN', id: 1, checked: true, twitter_flag:false},
@@ -284,21 +233,17 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
     $rootScope.playlists = $localStorage['newslists'];
   }
   
-
   $scope.moreOptions = function(){
     $scope.alert_flag = true;
-
     var hideSheet=$ionicActionSheet.show({
       buttons: [
         {text: '<b>Manage Feeds</b>'}
       ],
-      //destructiveText: 'Delete',
       titleText: 'More Options',
       cancelText: 'Cancel',
       cancel: function(){
         hideSheet();
       },
-
       buttonClicked:function(index){
         window.location.href="#/app/manage-feeds";
         return true;
@@ -314,16 +259,13 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
   $timeout(function(){
     $scope.showLoadingFlag = false;
   }, 2000);
-  
   $scope.alert_flag = false;
   $scope.title = $rootScope.playlists[$stateParams.playlistId].title;
   $rootScope.feed_type = true;
-  
-  $scope.getTwitterFeed = function (url){
 
+  $scope.getTwitterFeed = function (url){
     $rootScope.posts=[];
     $rootScope.images=[];
-
     TwitterREST.sync(url).then(function(tweets){
           console.log(tweets);
           $scope.tweets = tweets.statuses;
@@ -442,9 +384,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
             }
           }
 
-
           for (var i = 0; i<$rootScope.posts.length; i++){
-          
               var d1=new Date();
               var d2=new Date($rootScope.posts[i].created_at);
               var diff = new Date(d1.getTime() - d2.getTime());
@@ -468,17 +408,21 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       });
   }
 
-
   $scope.getRssFeed = function (url){
-
     $rootScope.feed_type = true;
     $rootScope.posts=[];
     $rootScope.images=[];
-    
-     var google_converter="http://ajax.googleapis.com/ajax/services/feed/load?v=2.0&num=50&callback=JSON_CALLBACK&q=";
-     var request = $http.jsonp(google_converter + encodeURIComponent(url));
+    var google_converter="http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=50&callback=JSON_CALLBACK&q=";
+    //var google_converter1="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url%20%3D%20'";
+    //var google_converter2="'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=JSON_CALLBACK";
+    console.log(encodeURIComponent(url));
+    var request = $http.jsonp(google_converter + encodeURIComponent(url));
+    //var request = $http.jsonp('https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url%20%3D%20\'' 
+    //  + encodeURIComponent(url) + '\'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=JSON_CALLBACK');
     request.success(function(res){
+      console.log(res);
       var insteadposts = res.responseData.feed.entries;
+      //var insteadposts = res.query.results.rss.channel.item;
       for(var ii=0; ii<insteadposts.length; ii++){
           if (insteadposts[ii].content.includes("nfl") || insteadposts[ii].link.includes("nfl") || insteadposts[ii].title.includes("nfl") 
               || $stateParams.playlistId>=10 || $stateParams.playlistId==3 || $stateParams.playlistId==8){
@@ -534,7 +478,6 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                   var end_position = insteadposts[ii].content.indexOf(">");
                   var image_str = insteadposts[ii].content.substring(17, end_position-1);
                   if (image_str != null){
-                    //alert(image_str);
                     $rootScope.images.push(image_str);
                   }
                   else{
@@ -566,7 +509,6 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                   $rootScope.images.push("img/sources/28.png");
               }
               else if($stateParams.playlistId == 29){
-
                   if (insteadposts[ii].mediaGroups != null){
                     console.log(insteadposts[ii].mediaGroups[0].contents[0].url);
                     $rootScope.images.push(insteadposts[ii].mediaGroups[0].contents[0].url);
@@ -606,7 +548,6 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                   $rootScope.images.push("img/sources/50.png");
               }
               else if ($stateParams.playlistId == 51){
-
                   if (insteadposts[ii].mediaGroups != null){
                     console.log(insteadposts[ii].mediaGroups[0].contents[0].url);
                     $rootScope.images.push(insteadposts[ii].mediaGroups[0].contents[0].url);
@@ -640,7 +581,6 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                   $rootScope.images.push("img/sources/68.png");
               }
               else if ($stateParams.playlistId == 69){
-
                   if (insteadposts[ii].mediaGroups != null){
                     console.log(insteadposts[ii].mediaGroups[0].contents[0].url);
                     $rootScope.images.push(insteadposts[ii].mediaGroups[0].contents[0].url);
@@ -676,7 +616,6 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       }
 
       for (var i = 0; i<$rootScope.posts.length; i++){
-          
           var d1=new Date();
           var d2=new Date($rootScope.posts[i].publishedDate);
           var diff = new Date(d1.getTime() - d2.getTime());
@@ -697,17 +636,12 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
               $rootScope.posts[i].publishedDate = "Just posted";
           }
       }
-
     })
   }
 
   var url;
   $rootScope.images=[];
-  // $scope.titles=[];
-  // $scope.pubDates=[];
-
   url = $rootScope.urlList[$stateParams.playlistId];
-
   if ($stateParams.playlistId == 0 ){
     $scope.getRssFeed(url);
   }
@@ -753,10 +687,8 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
   else if ($stateParams.playlistId % 2 == 0){
     $scope.getTwitterFeed(url);
   }
-
+  
   $scope.openbrowser = function (index) {
-    
-
     var link;
     if ($rootScope.feed_type == true){
       link = $rootScope.posts[index].link
@@ -771,15 +703,11 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       clearcache: 'yes',
       toolbar: 'no'
    };
-     $cordovaInAppBrowser.open(link, '_self', options)
-    
-      .then(function(event) {
-         // success
-      })
-    
-      .catch(function(event) {
-         // error
-      });
+   $cordovaInAppBrowser.open(link, '_self', options)
+    .then(function(event) {
+    })
+    .catch(function(event) {
+    });
   }
 
   $scope.doRefresh = function(){
@@ -794,19 +722,16 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
 
   $scope.moreOptions = function(){
     $scope.alert_flag = true;
-
     var hideSheet=$ionicActionSheet.show({
       buttons: [
         {text: '<b>Refresh</b>'},
         {text: '<b>Mark All as Read</b>'}
       ],
-      //destructiveText: 'Delete',
       titleText: 'More Options',
       cancelText: 'Cancel',
       cancel: function(){
         hideSheet();
       },
-
       buttonClicked:function(inded){
         return true;
       }
@@ -816,45 +741,26 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
   $scope.cancelOptions = function(){
     $scope.alert_flag = false;
   }
-
-  // $scope.articles = [
-  //   { title: 'Jared Goff\'s high school coach says his former QB is ready to ...' , id: 1, source_id: 1},
-  //   { title: 'Jared Goff\'s high school coach says his former QB is ready to ...', id: 2 , source_id: 1},
-  //   { title: 'Jared Goff\'s high school coach says his former QB is ready to ...', id: 3 , source_id: 1},
-  //   { title: 'Jared Goff\'s high school coach says his former QB is ready to ...', id: 4 , source_id: 1},
-  //   { title: 'Jared Goff\'s high school coach says his former QB is ready to ...', id: 5 , source_id: 1},
-  //   { title: 'Jared Goff\'s high school coach says his former QB is ready to ...', id: 6 , source_id: 1},
-  //   { title: 'Jared Goff\'s high school coach says his former QB is ready to ...', id: 7 , source_id: 1},
-  //   { title: 'Jared Goff\'s high school coach says his former QB is ready to ...', id: 8 , source_id: 1},
-  //   { title: 'Jared Goff\'s high school coach says his former QB is ready to ...', id: 9 , source_id: 1},
-  //   { title: 'Jared Goff\'s high school coach says his former QB is ready to ...', id: 10 , source_id: 1}
-  // ];
 })
 
-.controller('ArticlePreviewCtrl', function($scope, $stateParams, $rootScope, $cordovaInAppBrowser, $sce) {
+.controller('ArticlePreviewCtrl', function($scope, $stateParams, $rootScope, $cordovaInAppBrowser, $sce, $state) {
 
     var article_position;
     article_position = $stateParams.articleId;
     
-
     $scope.beforeArticle = function(){
-        
-        //alert(article_position);
         if (article_position>0){
           article_position--;
           getPreviewArticle();
-        
         }
     }
 
     var getPreviewArticle = function(){
       if ($rootScope.feed_type == true){
             $rootScope.article_link = $sce.trustAsResourceUrl($rootScope.posts[article_position].link);
-            //$scope.link = $sce.trustAsResourceUrl("http://www.espn.com");
             $scope.title = $rootScope.posts[article_position].title;
             $scope.time = $rootScope.posts[article_position].publishedDate;
             $scope.author = $rootScope.posts[article_position].author;
-
             if ($rootScope.posts[article_position].link.includes("sbnation")){
               $scope.content = $rootScope.posts[article_position].contentSnippet;
             }
@@ -867,7 +773,6 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
             var position = $rootScope.posts[article_position].text.search("https://");
             var linkk = $rootScope.posts[article_position].text.substring(position, position+23);
             $rootScope.article_link = $sce.trustAsResourceUrl(linkk);
-            //$scope.link = $sce.trustAsResourceUrl("http://www.espn.com");
             $scope.title = $rootScope.posts[article_position].text;
             $scope.time = $rootScope.posts[article_position].created_at;
             if ($rootScope.posts[article_position].retweeted_status != undefined){
@@ -876,93 +781,85 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
             else{
               $scope.author = $rootScope.posts[article_position].user.name;
             }
-            
-            $scope.content = "";//$rootScope.posts[$stateParams.articleId].content;
+            $scope.content = "";
             $scope.image = $rootScope.images[article_position]; 
       }
     }
 
     $scope.afterArticle = function(){
-        
         if (article_position < $rootScope.posts.length-1){
           article_position++;
           getPreviewArticle();    
         }
-      
     }
 
-    
-
-    $scope.openbrowser = function () {
-      
-      // // $cordovaInAppBrowser.open($rootScope.article_link, '_self', options)
-      
-       $scope.showLoadingFlag = true;
-       var options = {
-          location: 'no',
-          clearcache: 'yes',
-          toolbar: 'no'
-       };
-     $cordovaInAppBrowser.open($rootScope.article_link, '_self', options)
-    
-      .then(function(event) {
-          console.log("success+"+JSON.stringify(event));
-          $scope.showLoadingFlag = false;
-         // success
-      })
-    
-      .catch(function(event) {
-        $scope.showLoadingFlag = false;
-        console.log("success+"+JSON.stringify(event));
-         // error
-          // alert("failure"+event);
-      });
+    $scope.openbrowser = function () {      
+      // $scope.showLoadingFlag = true;
+      //  var options = {
+      //     location: 'no',
+      //     clearcache: 'yes',
+      //     toolbar: 'no'
+      //  };
+      // $cordovaInAppBrowser.open($rootScope.article_link, '_self', options)
+      // .then(function(event) {
+      //     console.log("success+"+JSON.stringify(event));
+      //     $scope.showLoadingFlag = false;
+      // })
+      // .catch(function(event) {
+      //   $scope.showLoadingFlag = false;
+      //   console.log("success+"+JSON.stringify(event));
+      // });
+      $state.go('app.article');
     }
-
     getPreviewArticle();   
 })
 
-.controller('ArticleCtrl', function($scope, $ionicActionSheet, $timeout, $rootScope) {
-  
+.controller('ArticleCtrl', function($scope, $ionicActionSheet, $timeout, $rootScope, $cordovaInAppBrowser) {
   $scope.link = $rootScope.article_link;
   $scope.opensafari = function(url){
     var hideSheet=$ionicActionSheet.show({
       buttons: [
         {text: '<b>Open Safari</b>'}
       ],
-      
       titleText: 'Other Options',
       cancelText: 'Cancel',
       cancel: function(){
         hideSheet();
       },
-
       buttonClicked:function(inded){
-        alert(url);
-        window.open=(url, '_system', 'location=yes');
+        $scope.showLoadingFlag = true;
+         var options = {
+            location: 'no',
+            clearcache: 'yes',
+            toolbar: 'no'
+         };
+        $cordovaInAppBrowser.open($rootScope.article_link, '_self', options)
+        .then(function(event) {
+            console.log("success+"+JSON.stringify(event));
+            $scope.showLoadingFlag = false;
+        })
+        .catch(function(event) {
+          $scope.showLoadingFlag = false;
+          console.log("success+"+JSON.stringify(event));
+        });
         return true;
       }
     });
-
   };
-
 })
 
 .controller('LiveScoresCtrl', function($scope, dataService1) {
     $scope.scoreData = [];
     $scope.showLoadingFlag = true;
-
     var today = new Date();
     today = new Date(today.getTime() + 60*60*24*1000*7)
-
     var count = 0;
+    
     for (var i=0; i<15; i++){
-
         today = new Date(today.getTime() - 60*60*24*1000);
         var dd=today.getDate();
         var mm=today.getMonth()+1;
         var yyyy=today.getFullYear();
-
         if (dd<10){
           dd='0'+dd;
         }
@@ -970,25 +867,15 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
           mm='0'+mm;
         }
         var date = yyyy+""+mm+""+dd;
-
-        //$scope.showLoadingFlag = true;
-
+        
         dataService1.getData(date).then(function(dataResponse){
-
             count++;
-
             if (dataResponse.data.scoreboard.gameScore != undefined){
-
               $scope.scoreData.push(dataResponse.data.scoreboard.gameScore);
               console.log($scope.scoreData);
-              // for (var j=0; j<dataResponse.data.scoreboard.gameScore.length; j++){
-              //     console.log(dataResponse.data.scoreboard.gameScore[j]);
-              //     $scope.scoreData.push(dataResponse.data.scoreboard.gameScore[j]);
-              // }
             }
             if (count == 15){
                 $scope.showLoadingFlag = false;
-
                 for (var i = 0; i<$scope.scoreData.length; i++){
                     for (var j = i+1; j<$scope.scoreData.length; j++){
                         var d1=Date.parse($scope.scoreData[i][0].game.date);
@@ -1002,25 +889,21 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                     }
                 }
             }
-            
         });
     }
 
     $scope.refresh = function(){
         $scope.scoreData = [];
         $scope.showLoadingFlag = true;
-
         var today = new Date();
         today = new Date(today.getTime() + 60*60*24*1000*7)
-
         var count = 0;
-        for (var i=0; i<15; i++){
 
+        for (var i=0; i<15; i++){
             today = new Date(today.getTime() - 60*60*24*1000);
             var dd=today.getDate();
             var mm=today.getMonth()+1;
             var yyyy=today.getFullYear();
-
             if (dd<10){
               dd='0'+dd;
             }
@@ -1029,24 +912,14 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
             }
             var date = yyyy+""+mm+""+dd;
 
-            //$scope.showLoadingFlag = true;
-
             dataService1.getData(date).then(function(dataResponse){
-
                 count++;
-
                 if (dataResponse.data.scoreboard.gameScore != undefined){
-
                   $scope.scoreData.push(dataResponse.data.scoreboard.gameScore);
                   console.log($scope.scoreData);
-                  // for (var j=0; j<dataResponse.data.scoreboard.gameScore.length; j++){
-                  //     console.log(dataResponse.data.scoreboard.gameScore[j]);
-                  //     $scope.scoreData.push(dataResponse.data.scoreboard.gameScore[j]);
-                  // }
                 }
                 if (count == 15){
                     $scope.showLoadingFlag = false;
-
                     for (var i = 0; i<$scope.scoreData.length; i++){
                         for (var j = i+1; j<$scope.scoreData.length; j++){
                             var d1=Date.parse($scope.scoreData[i][0].game.date);
@@ -1060,36 +933,30 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                         }
                     }
                 }
-                
             });
         }
     }
-    
 })
 
 .controller('ManageFeedsCtrl', function($scope, $stateParams,$ionicActionSheet, $timeout, $localStorage, $rootScope) {
 
-    $scope.selectFeeds = function(id){
-        $rootScope.playlists[id-1].checked = !$rootScope.playlists[id-1].checked;
-        $localStorage['newslists'] = $rootScope.playlists;
-    }
+  $scope.selectFeeds = function(id){
+      $rootScope.playlists[id-1].checked = !$rootScope.playlists[id-1].checked;
+      $localStorage['newslists'] = $rootScope.playlists;
+  }
 
   $scope.selectAll = function(){
     $scope.alert_flag = true;
-
     var hideSheet=$ionicActionSheet.show({
       buttons: [
         {text: '<b>Select All</b>'}
       ],
-      //destructiveText: 'Delete',
       titleText: 'More Options',
       cancelText: 'Cancel',
       cancel: function(){
         hideSheet();
       },
-
       buttonClicked:function(index){
-
         for (var k=0; k<$rootScope.playlists.length; k++){
           $rootScope.playlists[k].checked = true;
         }
