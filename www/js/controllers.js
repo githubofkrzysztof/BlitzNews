@@ -820,22 +820,22 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
     }
 
     $scope.openbrowser = function () {      
-      $scope.showLoadingFlag = true;
-       var options = {
-          location: 'no',
-          clearcache: 'yes',
-          toolbar: 'no'
-       };
-      $cordovaInAppBrowser.open($rootScope.article_link, '_self', options)
-      .then(function(event) {
-          console.log("success+"+JSON.stringify(event));
-          $scope.showLoadingFlag = false;
-      })
-      .catch(function(event) {
-        $scope.showLoadingFlag = false;
-        console.log("success+"+JSON.stringify(event));
-      });
-      //$state.go('app.article');
+      // $scope.showLoadingFlag = true;
+      //  var options = {
+      //     location: 'no',
+      //     clearcache: 'yes',
+      //     toolbar: 'no'
+      //  };
+      // $cordovaInAppBrowser.open($rootScope.article_link, '_self', options)
+      // .then(function(event) {
+      //     console.log("success+"+JSON.stringify(event));
+      //     $scope.showLoadingFlag = false;
+      // })
+      // .catch(function(event) {
+      //   $scope.showLoadingFlag = false;
+      //   console.log("success+"+JSON.stringify(event));
+      // });
+      $state.go('app.article');
     }
     getPreviewArticle();   
 })
@@ -856,10 +856,10 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
         $scope.showLoadingFlag = true;
          var options = {
             location: 'no',
-            clearcache: 'yes',
+            clearcache: 'no',
             toolbar: 'no'
          };
-        $cordovaInAppBrowser.open($rootScope.article_link, '_self', options)
+        $cordovaInAppBrowser.open($rootScope.article_link, '_blank', options)
         .then(function(event) {
             console.log("success+"+JSON.stringify(event));
             $scope.showLoadingFlag = false;

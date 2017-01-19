@@ -4,12 +4,17 @@
     <i class="icon ion-android-more-vertical more-option-icon" ng-click="opensafari()"></i>
   </ion-nav-buttons>
 
-  <ion-content>
+  <!-- <ion-content>
+    <iframe src="{{link}}" style="width: 100%; height : 100vh;"></iframe>
   	<iframe src="https://t.co/SAk1kL2zLK" style="width: 100%; height : 100vh;"></iframe>
-    <!-- <iframe ng-src="{{link}}" style="width: 100%; height : 100vh;"></iframe> -->
-    <!-- <div class="myIframe">
+    <iframe ng-src="{{link}}" style="width: 100%; height : 100vh;"></iframe>
+    <div class="myIframe">
         <iframe ng-src="{{link}}"></iframe>
-    </div> -->
+    </div>
 
-  </ion-content>
+  </ion-content> -->
+
+  <ion-content scroll="true" overflow-scroll="true" class="iframe-wrapper">
+   <iframe data-tap-disabled="true" src="{{link}}"></iframe>
+</ion-content>
 </ion-view>
