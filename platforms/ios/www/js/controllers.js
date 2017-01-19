@@ -936,10 +936,10 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
     $scope.refresh = function(){
         $scope.scoreData = [];
         $scope.showLoadingFlag = true;
-        var today = new Date();
+        var today = new Date("2017-01-02");
         today = new Date(today.getTime() + 60*60*24*1000*7)
         var count = 0;
-
+        
         for (var i=0; i<15; i++){
             today = new Date(today.getTime() - 60*60*24*1000);
             var dd=today.getDate();
@@ -952,7 +952,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
               mm='0'+mm;
             }
             var date = yyyy+""+mm+""+dd;
-
+            
             dataService1.getData(date).then(function(dataResponse){
                 count++;
                 if (dataResponse.data.scoreboard.gameScore != undefined){
@@ -973,6 +973,21 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                             }
                         }
                     }
+
+                    for (var k = 0; k<$scope.scoreData.length; k++){
+                        var temp_date = new Date($scope.scoreData[k][0].game.date);
+                        var ddd=temp_date.getUTCDate();
+                        var mmm=temp_date.getUTCMonth()+1;
+                        var yyyyy=temp_date.getUTCFullYear();
+                        if (ddd<10){
+                          ddd='0'+ddd;
+                        }
+                        if (mmm<10){
+                          mmm='0'+mmm;
+                        }
+                        $scope.scoreData[k][0].game.date=mmm+"/"+ddd+"/"+yyyyy;
+                    }
+
                 }
             });
         }
