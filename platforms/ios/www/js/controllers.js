@@ -178,39 +178,39 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
 
           { title: 'Kansas City Chiefs', id: 44 , checked: true, twitter_flag:false },
           { title: 'Kansas City Chiefs - Twitter', id: 45 , checked: true, twitter_flag:true},
+
+          { title: 'Los Angeles Chargers', id: 46 , checked: true, twitter_flag:false },
+          { title: 'Los Angeles Chargers - Twitter', id: 47 , checked: true, twitter_flag:true},
           
-          { title: 'Los Angeles Rams', id: 46 , checked: true, twitter_flag:false },
-          { title: 'Los Angeles Rams - Twitter', id: 47 , checked: true, twitter_flag:true},
+          { title: 'Los Angeles Rams', id: 48 , checked: true, twitter_flag:false },
+          { title: 'Los Angeles Rams - Twitter', id: 49 , checked: true, twitter_flag:true},
 
-          { title: 'Miami Dolphins', id: 48 , checked: true, twitter_flag:false },
-          { title: 'Miami Dolphins - Twitter', id: 49 , checked: true, twitter_flag:true},
+          { title: 'Miami Dolphins', id: 50 , checked: true, twitter_flag:false },
+          { title: 'Miami Dolphins - Twitter', id: 51 , checked: true, twitter_flag:true},
           
-          { title: 'Minnesota Vikings', id: 50 , checked: true, twitter_flag:false },
-          { title: 'Minnesota Vikings - Twitter', id: 51 , checked: true, twitter_flag:true},
+          { title: 'Minnesota Vikings', id: 52 , checked: true, twitter_flag:false },
+          { title: 'Minnesota Vikings - Twitter', id: 53 , checked: true, twitter_flag:true},
 
-          { title: 'New England Patriots', id: 52 , checked: true, twitter_flag:false },
-          { title: 'New England Patriots - Twitter', id: 53 , checked: true, twitter_flag:true},
+          { title: 'New England Patriots', id: 54 , checked: true, twitter_flag:false },
+          { title: 'New England Patriots - Twitter', id: 55 , checked: true, twitter_flag:true},
 
-          { title: 'New Orleans Saints', id: 54 , checked: true, twitter_flag:false },
-          { title: 'New Orleans Saints - Twitter', id: 55 , checked: true, twitter_flag:true},
+          { title: 'New Orleans Saints', id: 56 , checked: true, twitter_flag:false },
+          { title: 'New Orleans Saints - Twitter', id: 57 , checked: true, twitter_flag:true},
 
-          { title: 'New York Giants', id: 56 , checked: true, twitter_flag:false },
-          { title: 'New York Giants - Twitter', id: 57 , checked: true, twitter_flag:true},
+          { title: 'New York Giants', id: 58 , checked: true, twitter_flag:false },
+          { title: 'New York Giants - Twitter', id: 59 , checked: true, twitter_flag:true},
 
-          { title: 'New York Jets', id: 58 , checked: true, twitter_flag:false },
-          { title: 'New York Jets - Twitter', id: 59 , checked: true, twitter_flag:true},
+          { title: 'New York Jets', id: 60 , checked: true, twitter_flag:false },
+          { title: 'New York Jets - Twitter', id: 61 , checked: true, twitter_flag:true},
 
-          { title: 'Oakland Raiders', id: 60 , checked: true, twitter_flag:false },
-          { title: 'Oakland Raiders - Twitter', id: 61 , checked: true, twitter_flag:true},
+          { title: 'Oakland Raiders', id: 62 , checked: true, twitter_flag:false },
+          { title: 'Oakland Raiders - Twitter', id: 63 , checked: true, twitter_flag:true},
           
-          { title: 'Philadelphia Eagles', id: 62 , checked: true, twitter_flag:false },
-          { title: 'Philadelphia Eagles - Twitter', id: 63 , checked: true, twitter_flag:true},
+          { title: 'Philadelphia Eagles', id: 64 , checked: true, twitter_flag:false },
+          { title: 'Philadelphia Eagles - Twitter', id: 65 , checked: true, twitter_flag:true},
           
-          { title: 'Pittsburgh Steelers', id: 64 , checked: true, twitter_flag:false },
-          { title: 'Pittsburgh Steelers - Twitter', id: 65 , checked: true, twitter_flag:true},
-
-          { title: 'San Diego Chargers', id: 66 , checked: true, twitter_flag:false },
-          { title: 'San Diego Chargers - Twitter', id: 67 , checked: true, twitter_flag:true},
+          { title: 'Pittsburgh Steelers', id: 66 , checked: true, twitter_flag:false },
+          { title: 'Pittsburgh Steelers - Twitter', id: 67 , checked: true, twitter_flag:true},
 
           { title: 'San Francisco 49ers', id: 68 , checked: true, twitter_flag:false },
           { title: 'San Francisco 49ers - Twitter', id: 69 , checked: true, twitter_flag:true},
@@ -262,7 +262,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
   }, 2000);
   $scope.alert_flag = false;
   $scope.title = $rootScope.playlists[$stateParams.playlistId].title;
-  $rootScope.feed_type = true;
+  $rootScope.feed_type = 0;
 
   $scope.getTwitterFeed = function (url){
     $rootScope.posts=[];
@@ -270,7 +270,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
     TwitterREST.sync(url).then(function(tweets){
           console.log(tweets);
           $scope.tweets = tweets.statuses;
-          $rootScope.feed_type = false;
+          $rootScope.feed_type = 1;
           $rootScope.posts = $scope.tweets;
 
           for (var j=0;j<$rootScope.posts.length;j++){
@@ -410,7 +410,8 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
   }
 
   $scope.getRssFeed = function (url){
-    $rootScope.feed_type = true;
+    $rootScope.feed_type = 0;
+    
     $rootScope.posts=[];
     $rootScope.images=[];
     var google_converter="http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=50&callback=JSON_CALLBACK&q=";
@@ -424,20 +425,18 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       console.log(res);
       //var insteadposts = res.responseData.feed.entries;
       var insteadposts;
-      if ($stateParams.playlistId != 12){
+      if ($stateParams.playlistId != 12 && $stateParams.playlistId != 11 && $stateParams.playlistId != 7){
         insteadposts = res.query.results.rss.channel.item;
       }
       else{
+        $rootScope.feed_type = 2;
         insteadposts = res.query.results.feed.entry;
       }
       for(var ii=0; ii<insteadposts.length; ii++){
 
 
-        
-
-
-          if (insteadposts[ii].description.includes("nfl") || insteadposts[ii].link.includes("nfl") || insteadposts[ii].title.includes("nfl") 
-              || $stateParams.playlistId>=10 || $stateParams.playlistId==3 || $stateParams.playlistId==8){
+          if ($stateParams.playlistId >= 10 || $stateParams.playlistId == 7 || insteadposts[ii].description.includes("nfl") || insteadposts[ii].link.includes("nfl") || insteadposts[ii].title.includes("nfl") 
+              || $stateParams.playlistId==3 || $stateParams.playlistId==8){
               $rootScope.posts.push(insteadposts[ii]);
               if ($stateParams.playlistId == 0){
                   $rootScope.images.push("img/sources/1.png");
@@ -495,8 +494,9 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
               }
               else if ($stateParams.playlistId == 12){
                   
-                  var end_position = insteadposts[ii].description.indexOf(">");
-                  var image_str = insteadposts[ii].description.substring(17, end_position-1);
+                  var end_position = insteadposts[ii].content.content.indexOf(">");
+                  var image_str = insteadposts[ii].content.content.substring(22, end_position-3);
+                  console.log(image_str);
                   if (image_str != null){
                     $rootScope.images.push(image_str);
                   }
@@ -623,40 +623,79 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       }
       console.log($rootScope.posts);
 
-      for (var i = 0; i<$rootScope.posts.length; i++){
-          for (var j = i+1; j<$rootScope.posts.length; j++){
-              var d1=Date.parse($rootScope.posts[i].pubDate);
-              var d2=Date.parse($rootScope.posts[j].pubDate);
-              var temp;
-              if (d1<d2){
-                  temp = $rootScope.posts[i];
-                  $rootScope.posts[i]=$rootScope.posts[j];
-                  $rootScope.posts[j]=temp;
-              }
-          }
-      }
+      if ($stateParams.playlistId == 12 || $stateParams.playlistId == 11 || $stateParams.playlistId == 7){
+            for (var i = 0; i<$rootScope.posts.length; i++){
+                for (var j = i+1; j<$rootScope.posts.length; j++){
+                    var d1=Date.parse($rootScope.posts[i].published);
+                    var d2=Date.parse($rootScope.posts[j].published);
+                    var temp;
+                    if (d1<d2){
+                        temp = $rootScope.posts[i];
+                        $rootScope.posts[i]=$rootScope.posts[j];
+                        $rootScope.posts[j]=temp;
+                    }
+                }
+            }
 
-      for (var i = 0; i<$rootScope.posts.length; i++){
-          var d1=new Date();
-          var d2=new Date($rootScope.posts[i].pubDate);
-          var diff = new Date(d1.getTime() - d2.getTime());
-          var days = diff.getUTCDate()-1;
-          var hours = diff.getUTCHours();
-          var mins = diff.getUTCMinutes();
+            for (var i = 0; i<$rootScope.posts.length; i++){
+                var d1=new Date();
+                var d2=new Date($rootScope.posts[i].published);
+                var diff = new Date(d1.getTime() - d2.getTime());
+                var days = diff.getUTCDate()-1;
+                var hours = diff.getUTCHours();
+                var mins = diff.getUTCMinutes();
 
-          if (days > 0){
-              $rootScope.posts[i].pubDate = days + "d ago";
-          }
-          else if (hours > 0){
-              $rootScope.posts[i].pubDate = hours + "h ago";
-          }
-          else if (mins > 0){
-              $rootScope.posts[i].pubDate = mins + "m ago";
-          }
-          else {
-              $rootScope.posts[i].pubDate = "Just posted";
-          }
+                if (days > 0){
+                    $rootScope.posts[i].published = days + "d ago";
+                }
+                else if (hours > 0){
+                    $rootScope.posts[i].published = hours + "h ago";
+                }
+                else if (mins > 0){
+                    $rootScope.posts[i].published = mins + "m ago";
+                }
+                else {
+                    $rootScope.posts[i].published = "Just posted";
+                }
+            }
       }
+      else{
+        for (var i = 0; i<$rootScope.posts.length; i++){
+            for (var j = i+1; j<$rootScope.posts.length; j++){
+                var d1=Date.parse($rootScope.posts[i].pubDate);
+                var d2=Date.parse($rootScope.posts[j].pubDate);
+                var temp;
+                if (d1<d2){
+                    temp = $rootScope.posts[i];
+                    $rootScope.posts[i]=$rootScope.posts[j];
+                    $rootScope.posts[j]=temp;
+                }
+            }
+        }
+
+        for (var i = 0; i<$rootScope.posts.length; i++){
+            var d1=new Date();
+            var d2=new Date($rootScope.posts[i].pubDate);
+            var diff = new Date(d1.getTime() - d2.getTime());
+            var days = diff.getUTCDate()-1;
+            var hours = diff.getUTCHours();
+            var mins = diff.getUTCMinutes();
+
+            if (days > 0){
+                $rootScope.posts[i].pubDate = days + "d ago";
+            }
+            else if (hours > 0){
+                $rootScope.posts[i].pubDate = hours + "h ago";
+            }
+            else if (mins > 0){
+                $rootScope.posts[i].pubDate = mins + "m ago";
+            }
+            else {
+                $rootScope.posts[i].pubDate = "Just posted";
+            }
+        }
+      }
+      
     })
   }
 
@@ -711,12 +750,15 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
   
   $scope.openbrowser = function (index) {
     var link;
-    if ($rootScope.feed_type == true){
-      link = $rootScope.posts[index].link
+    if ($rootScope.feed_type == 0){
+      link = $rootScope.posts[index].link;
     }
-    else {
+    else if ($rootSccope.feed_type == 1){
       var position = $rootScope.posts[index].text.search("https://");
       link = $rootScope.posts[index].text.substring(position, position+23);
+    }
+    else{
+      link = $rootScope.posts[index].link.href;
     }
     console.log(link);
     var options = {
@@ -732,7 +774,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
   }
 
   $scope.doRefresh = function(){
-    if ($rootScope.feed_type == true){
+    if ($rootScope.feed_type == 0 || $rootScope.feedtype == 2){
       $scope.getRssFeed(url);
     }
     else{
@@ -777,7 +819,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
     }
 
     var getPreviewArticle = function(){
-      if ($rootScope.feed_type == true){
+      if ($rootScope.feed_type == 0){
             $rootScope.article_link = $sce.trustAsResourceUrl($rootScope.posts[article_position].link);
             console.log($rootScope.article_link);
             $scope.title = $rootScope.posts[article_position].title;
@@ -794,7 +836,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
             }
             $scope.image = $rootScope.images[article_position];
       }
-      else {
+      else if ($rootScope.feed_type == 1){
             var position = $rootScope.posts[article_position].text.search("https://");
             var linkk = $rootScope.posts[article_position].text.substring(position, position+23);
             $rootScope.article_link = $sce.trustAsResourceUrl(linkk);
@@ -809,6 +851,41 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
             }
             $scope.content = "";
             $scope.image = $rootScope.images[article_position]; 
+      }
+      else {
+
+            if ($rootScope.posts[article_position].title.content != undefined){
+              $rootScope.article_link = $sce.trustAsResourceUrl($rootScope.posts[article_position].link[0].href);
+              $scope.title = $rootScope.posts[article_position].title.content;
+            }
+            else{
+              $rootScope.article_link = $sce.trustAsResourceUrl($rootScope.posts[article_position].link.href);
+              $scope.title = $rootScope.posts[article_position].title;
+            }
+            console.log($rootScope.article_link);
+            
+            $scope.time = $rootScope.posts[article_position].published;
+            if ($rootScope.posts[article_position].author.name!=undefined)
+              $scope.author = $rootScope.posts[article_position].author.name;
+            else
+              $scope.author="";
+
+            if ($rootScope.posts[article_position].link.href != undefined){
+                if ($rootScope.posts[article_position].link.href.includes("sbnation")){
+                    $scope.content = $rootScope.posts[article_position].title;
+                }
+                else if ($rootScope.posts[article_position].summary == undefined){
+                    $scope.content = $rootScope.posts[article_position].content.content;
+                }
+                else{
+                    $scope.content = $rootScope.posts[article_position].summary.content;
+                }
+            }
+            else{
+              $scope.content = $rootScope.posts[article_position].summary.content;
+            }
+            
+            $scope.image = $rootScope.images[article_position];
       }
     }
 
