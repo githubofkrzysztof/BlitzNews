@@ -762,11 +762,11 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
     }
     console.log(link);
     var options = {
-      location: 'no',
+      location: 'yes',
       clearcache: 'yes',
-      toolbar: 'no'
+      toolbar: 'yes'
    };
-   $cordovaInAppBrowser.open(link, '_self', options)
+   $cordovaInAppBrowser.open(link, '_system', options)
     .then(function(event) {
     })
     .catch(function(event) {
@@ -932,11 +932,11 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       buttonClicked:function(inded){
         $scope.showLoadingFlag = true;
          var options = {
-            location: 'no',
+            location: 'yes',
             clearcache: 'no',
-            toolbar: 'no'
+            toolbar: 'yes'
          };
-        $cordovaInAppBrowser.open($rootScope.article_link, '_blank', options)
+        $cordovaInAppBrowser.open($rootScope.article_link, '_system', options)
         .then(function(event) {
             console.log("success+"+JSON.stringify(event));
             $scope.showLoadingFlag = false;
