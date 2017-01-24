@@ -127,7 +127,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
           { title: 'Fox Sports', id: 10 , checked: true, twitter_flag:false },
           { title: 'Fox Sports NFL - Twitter', id: 11 , checked: true, twitter_flag:true},
           
-          { title: 'NBC Sports', id: 12, checked: true , twitter_flag:false },
+           { title: 'NBC Sports', id: 12, checked: false , twitter_flag:false },
           
           { title: 'SBNation', id: 13 , checked: true, twitter_flag:false },
           
@@ -425,7 +425,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       console.log(res);
       //var insteadposts = res.responseData.feed.entries;
       var insteadposts;
-      if ($stateParams.playlistId != 12 && $stateParams.playlistId != 11 && $stateParams.playlistId != 7){
+      if ($stateParams.playlistId != 12 && $stateParams.playlistId != 7){
         insteadposts = res.query.results.rss.channel.item;
       }
       else{
@@ -435,7 +435,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       for(var ii=0; ii<insteadposts.length; ii++){
 
 
-          if ($stateParams.playlistId >= 10 || $stateParams.playlistId == 7 || insteadposts[ii].description.includes("nfl") || insteadposts[ii].link.includes("nfl") || insteadposts[ii].title.includes("nfl") 
+          if ($stateParams.playlistId == 4 || $stateParams.playlistId >= 10 || $stateParams.playlistId == 7 || insteadposts[ii].description.includes("nfl") || insteadposts[ii].link.includes("nfl") || insteadposts[ii].title.includes("nfl") 
               || $stateParams.playlistId==3 || $stateParams.playlistId==8){
               $rootScope.posts.push(insteadposts[ii]);
               if ($stateParams.playlistId == 0){
@@ -490,7 +490,13 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
                   $rootScope.images.push("img/sources/10.png");
               }
               else if ($stateParams.playlistId == 11){
-                  $rootScope.images.push("img/sources/12.png");
+                  if (insteadposts[ii].content != null){
+                    console.log(insteadposts[ii].content[0].url);
+                    $rootScope.images.push(insteadposts[ii].content[0].url);
+                  }
+                  else{
+                    $rootScope.images.push("img/sources/12.png");
+                  }
               }
               else if ($stateParams.playlistId == 12){
                   
@@ -623,7 +629,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       }
       console.log($rootScope.posts);
 
-      if ($stateParams.playlistId == 12 || $stateParams.playlistId == 11 || $stateParams.playlistId == 7){
+      if ($stateParams.playlistId == 12 || $stateParams.playlistId == 7){
             for (var i = 0; i<$rootScope.posts.length; i++){
                 for (var j = i+1; j<$rootScope.posts.length; j++){
                     var d1=Date.parse($rootScope.posts[i].published);
@@ -896,23 +902,28 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
         }
     }
 
-    $scope.openbrowser = function () {      
-      // $scope.showLoadingFlag = true;
-      //  var options = {
-      //     location: 'no',
-      //     clearcache: 'yes',
-      //     toolbar: 'no'
-      //  };
-      // $cordovaInAppBrowser.open($rootScope.article_link, '_self', options)
-      // .then(function(event) {
-      //     console.log("success+"+JSON.stringify(event));
-      //     $scope.showLoadingFlag = false;
-      // })
-      // .catch(function(event) {
-      //   $scope.showLoadingFlag = false;
-      //   console.log("success+"+JSON.stringify(event));
-      // });
-      $state.go('app.article');
+    $scope.openbrowser = function () {
+
+      if ($rootScope.feed_type == 1){
+          var options = {
+            location: 'yes',
+            clearcache: 'no',
+            toolbar: 'yes'
+         };
+          $cordovaInAppBrowser.open($rootScope.article_link, '_system', options)
+          .then(function(event) {
+              console.log("success+"+JSON.stringify(event));
+              $scope.showLoadingFlag = false;
+          })
+          .catch(function(event) {
+            $scope.showLoadingFlag = false;
+            console.log("success+"+JSON.stringify(event));
+          });
+      }      
+      else{
+        $state.go('app.article');
+      }
+      
     }
     getPreviewArticle();   
 })
@@ -955,6 +966,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
     $scope.scoreData = [];
     $scope.showLoadingFlag = true;
     var today = new Date("2017-01-02");
+    //var today = new Date();
     today = new Date(today.getTime() + 60*60*24*1000*7)
     var count = 0;
     
@@ -1091,7 +1103,12 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       },
       buttonClicked:function(index){
         for (var k=0; k<$rootScope.playlists.length; k++){
-          $rootScope.playlists[k].checked = true;
+          if (k!=11){
+              $rootScope.playlists[k].checked = true;  
+          }
+          else{
+              $rootScope.playlists[k].checked = false;   
+          }
         }
         $localStorage['newslists'] = $rootScope.playlists;
         return true;
