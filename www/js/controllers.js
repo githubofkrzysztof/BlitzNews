@@ -273,6 +273,8 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
           $rootScope.feed_type = 1;
           $rootScope.posts = $scope.tweets;
 
+          $rootScope.feedURL = $rootScope.urlList[$stateParams.playlistId];
+          
           for (var j=0;j<$rootScope.posts.length;j++){
             if ($rootScope.posts[j].extended_entities != undefined){
               console.log($rootScope.posts[j].extended_entities.media[0].media_url);
@@ -280,6 +282,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
             }
             else if ($stateParams.playlistId == 1){
               $rootScope.images.push("img/sources/2.png");
+
             }
             else if ($stateParams.playlistId == 8){
               $rootScope.images.push("img/sources/9.png");
@@ -845,6 +848,9 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       else if ($rootScope.feed_type == 1){
             var position = $rootScope.posts[article_position].text.search("https://");
             var linkk = $rootScope.posts[article_position].text.substring(position, position+23);
+
+            $scope.str_article_link = linkk;
+
             $rootScope.article_link = $sce.trustAsResourceUrl(linkk);
             console.log($rootScope.article_link);
             $scope.title = $rootScope.posts[article_position].text;
@@ -866,6 +872,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
             }
             else{
               $rootScope.article_link = $sce.trustAsResourceUrl($rootScope.posts[article_position].link.href);
+
               $scope.title = $rootScope.posts[article_position].title;
             }
             console.log($rootScope.article_link);
@@ -905,6 +912,15 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
     $scope.openbrowser = function () {
 
       if ($rootScope.feed_type == 1){
+
+          console.log("linklinklinklinklink" + $rootScope.article_link);
+          
+          if ($scope.str_article_link.includes("http") && $scope.str_article_link.length == 23){
+          }
+          else{
+            $rootScope.article_link="https://www.twitter.com/" + $rootScope.feedURL;
+          }
+          
           var options = {
             location: 'yes',
             clearcache: 'no',
