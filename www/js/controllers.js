@@ -53,6 +53,32 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
           $scope.standingData[k]['@name'] = temp_str.substring(4);
       }
       console.log($scope.standingData);
+      
+    });
+
+    $scope.refresh = function(){
+        $scope.standingData = null;
+        $scope.showLoadingFlag = true;
+        dataService.getData().then(function(dataResponse){
+            $scope.showLoadingFlag = false;
+            $scope.standingData = dataResponse.data.divisionteamstandings.division;
+            console.log($scope.standingData);
+        });
+    }
+})
+
+.controller('NewsCtrl', function($scope, $ionicActionSheet, $timeout, $rootScope, TwitterREST, $localStorage, $state, $stateParams, $ionicPlatform, $ionicPopup) {
+  $rootScope.urlList = [];
+  var tbl_siteUrl = Parse.Object.extend("siteURL");
+  var query = new Parse.Query(tbl_siteUrl);
+  query.ascending("order");
+  query.find({
+    success: function(results) {
+      for (var i = 0; i < results.length; i++) {
+        $rootScope.urlList.push(results[i].get('url'));
+      }
+      console.log($rootScope.urlList);
+
       var admobid = {};
       if( /(android)/i.test(navigator.userAgent) ) {
         admobid = {
@@ -70,35 +96,14 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
           interstitial: 'ca-app-pub-xxx/kkk'
         };
       }
-      if(AdMob) AdMob.createBanner({
-        adId: admobid.banner,
-        position: AdMob.AD_POSITION.BOTTOM_CENTER,
-        autoShow: true 
-      });
-    });
 
-    $scope.refresh = function(){
-        $scope.standingData = null;
-        $scope.showLoadingFlag = true;
-        dataService.getData().then(function(dataResponse){
-            $scope.showLoadingFlag = false;
-            $scope.standingData = dataResponse.data.divisionteamstandings.division;
-            console.log($scope.standingData);
+      if(AdMob) 
+        AdMob.createBanner({
+          adId: admobid.banner,
+          position: AdMob.AD_POSITION.BOTTOM_CENTER,
+          autoShow: true 
         });
-    }
-})
 
-.controller('NewsCtrl', function($scope, $ionicActionSheet, $timeout, $rootScope, TwitterREST, $localStorage) {
-  $rootScope.urlList = [];
-  var tbl_siteUrl = Parse.Object.extend("siteURL");
-  var query = new Parse.Query(tbl_siteUrl);
-  query.ascending("order");
-  query.find({
-    success: function(results) {
-      for (var i = 0; i < results.length; i++) {
-        $rootScope.urlList.push(results[i].get('url'));
-      }
-      console.log($rootScope.urlList);
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
@@ -844,6 +849,8 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
               $scope.content = $rootScope.posts[article_position].description;
             }
             $scope.image = $rootScope.images[article_position];
+
+            $scope.str_article_link = $rootScope.posts[article_position].link;
       }
       else if ($rootScope.feed_type == 1){
             var position = $rootScope.posts[article_position].text.search("https://");
@@ -867,10 +874,12 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
       else {
 
             if ($rootScope.posts[article_position].title.content != undefined){
+              $scope.str_article_link = $rootScope.posts[article_position].link[0].href;
               $rootScope.article_link = $sce.trustAsResourceUrl($rootScope.posts[article_position].link[0].href);
               $scope.title = $rootScope.posts[article_position].title.content;
             }
             else{
+              $scope.str_article_link = $rootScope.posts[article_position].link.href;
               $rootScope.article_link = $sce.trustAsResourceUrl($rootScope.posts[article_position].link.href);
 
               $scope.title = $rootScope.posts[article_position].title;
@@ -921,6 +930,22 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ngStorage'])
             $rootScope.article_link="https://www.twitter.com/" + $rootScope.feedURL;
           }
           
+          var options = {
+            location: 'yes',
+            clearcache: 'no',
+            toolbar: 'yes'
+         };
+          $cordovaInAppBrowser.open($rootScope.article_link, '_system', options)
+          .then(function(event) {
+              console.log("success+"+JSON.stringify(event));
+              $scope.showLoadingFlag = false;
+          })
+          .catch(function(event) {
+            $scope.showLoadingFlag = false;
+            console.log("success+"+JSON.stringify(event));
+          });
+      }
+      else if($scope.str_article_link.includes("yahoo") || $scope.str_article_link.includes("sbnation") || $scope.str_article_link.includes("cbssport")){
           var options = {
             location: 'yes',
             clearcache: 'no',
