@@ -4,7 +4,7 @@
   </ion-nav-buttons>
   <ion-content>
     <div class="manage-content">
-    	<div class="card card-manage" ng-repeat="newslist in playlists" ng-click="selectFeeds(newslist.id)">
+    	<div class="card card-manage" ng-repeat="newslist in playlists" ng-click="selectFeeds(newslist.id)" ng-if="newslist.id != 12">
         <img src="img/sources/{{newslist.id}} copy.png" class="manage-image"/>
         <div class="sources-text">{{newslist.title}}</div>
         <ion-checkbox class="check-box" ng-checked="newslist.checked"></ion-checkbox>
